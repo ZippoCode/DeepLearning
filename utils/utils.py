@@ -1,33 +1,6 @@
-import os.path
 import typing
 
-import h5py
-import sys
 import numpy as np
-
-ROOT_DIR = sys.path[1]  # Project Root
-
-
-def load_dataset():
-    path_train = os.path.join(ROOT_DIR, 'datasets/train_catvnoncat.h5')
-    path_test = os.path.join(ROOT_DIR, 'datasets/test_catvnoncat.h5')
-    if not os.path.exists(path_train) or not os.path.exists(path_test):
-        return
-
-    train_dataset = h5py.File(path_train, "r")
-    train_set_x_orig = np.array(train_dataset["train_set_x"][:])  # your train set features
-    train_set_y_orig = np.array(train_dataset["train_set_y"][:])  # your train set labels
-
-    test_dataset = h5py.File(path_test, "r")
-    test_set_x_orig = np.array(test_dataset["test_set_x"][:])  # your test set features
-    test_set_y_orig = np.array(test_dataset["test_set_y"][:])  # your test set labels
-
-    classes = np.array(test_dataset["list_classes"][:])  # the list of classes
-
-    train_set_y_orig = train_set_y_orig.reshape((1, train_set_y_orig.shape[0]))
-    test_set_y_orig = test_set_y_orig.reshape((1, test_set_y_orig.shape[0]))
-
-    return train_set_x_orig, train_set_y_orig, test_set_x_orig, test_set_y_orig, classes
 
 
 def sigmoid(x: typing.Union[float, np.ndarray]) -> typing.Union[float, np.ndarray]:
@@ -37,7 +10,7 @@ def sigmoid(x: typing.Union[float, np.ndarray]) -> typing.Union[float, np.ndarra
     :param x: A scalar or numpy array of any size
     :return: sigmoid(x)
     """
-    s = 1 / (1 + np.exp(-x))
+    s = 1. / (1. + np.exp(-x))
     return s
 
 
