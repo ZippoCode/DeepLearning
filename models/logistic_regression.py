@@ -82,16 +82,16 @@ def propagate(weights: np.ndarray, bias: float, x: np.ndarray, y: np.ndarray) ->
 
     m = x.shape[1]
     a = sigmoid(np.dot(weights.T, x) + bias)
-    loss = - 1 / m * np.sum(y * np.log(a) + (1 - y) * np.log(1 - a))
+    cost = - 1 / m * np.sum(y * np.log(a) + (1 - y) * np.log(1 - a))
 
     dw = 1 / m * np.dot(x, (a - y).T)
     db = 1 / m * np.sum(a - y)
-    # loss = np.squeeze(np.array(loss))
+    # cost = np.squeeze(np.array(cost))
 
     grads = {"dw": dw,
              "db": db}
 
-    return grads, loss
+    return grads, cost
 
 
 def optimize(weights: np.ndarray, biases: float, x: np.ndarray, y: np.ndarray, num_iterations=100, learning_rate=0.009,
@@ -116,11 +116,11 @@ def optimize(weights: np.ndarray, biases: float, x: np.ndarray, y: np.ndarray, n
     weights = copy.deepcopy(weights)
     biases = copy.deepcopy(biases)
 
-    train_loss = []
+    costs = []
 
     dw, db = 0., 0.
     for i in range(num_iterations):
-        grads, loss = propagate(weights, biases, x, y)
+        grads, cost = propagate(weights, biases, x, y)
         dw = grads["dw"]
         db = grads["db"]
 
@@ -128,14 +128,14 @@ def optimize(weights: np.ndarray, biases: float, x: np.ndarray, y: np.ndarray, n
         biases = biases - learning_rate * db
 
         if i % 100 == 0:
-            train_loss.append(loss)
+            costs.append(cost)
             if print_cost:
-                print("Loss after iteration %i: %f" % (i, loss))
+                print("Loss after iteration %i: %f" % (i, cost))
 
     params = {"w": weights, "b": biases}
     grads = {"dw": dw, "db": db}
 
-    return params, grads, train_loss
+    return params, grads, costs
 
 
 def predict(weights: np.ndarray, bias: float, x: np.ndarray):
@@ -201,7 +201,8 @@ def model(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarray, y_test: 
     return logistic_regression_model
 
 
-def show_different_learning_rate(learning_rates: list):
+def show_different_learning_rate(learning_rates: list, train_set_x: np.ndarray, train_set_y: np.ndarray,
+                                 test_set_x: np.ndarray, test_set_y: np.ndarray):
     models = {}
     for lr in learning_rates:
         print("Training a model with learning rate: " + str(lr))
@@ -217,7 +218,7 @@ def show_different_learning_rate(learning_rates: list):
     plt.show()
 
 
-def predict_image(image_path: Path, patch_size: int):
+def predict_image(logistic_regression_model: dict, image_path: Path, patch_size: int):
     if not image_path.exists():
         print(f"Image \"{image_path}\" not exist")
         return
@@ -245,14 +246,14 @@ if __name__ == '__main__':
     print("Train model")
     logistic_regression_model = model(train_set_x, train_set_y, test_set_x, test_set_y, num_iterations=2000,
                                       learning_rate=0.005, print_cost=True)
-    losses = np.squeeze(logistic_regression_model['costs'])
-    plt.plot(losses)
+    costs = np.squeeze(logistic_regression_model['costs'])
+    plt.plot(costs)
     plt.ylabel('cost')
     plt.xlabel('iterations (per hundreds)')
-    plt.title("Learning rate =" + str(logistic_regression_model["learning_rate"]))
-    plt.show()
-
-    # learning_rates = [0.01, 0.005, 0.001, 0.0005, 0.0001]
-    # show_different_learning_rate(learning_rates)
-    image_path = os.path.join(ROOT_DIR, 'datasets/images/cat_1.jpg')
-    predict_image(Path(image_path), patch_size=image_size)
+#     plt.title("Learning rate =" + str(logistic_regression_model["learning_rate"]))
+#     plt.show()
+#
+#     learning_rates = [0.01, 0.005, 0.001, 0.0005, 0.0001]
+#     show_different_learning_rate(learning_rates, train_set_x, train_set_y, test_set_x, test_set_y)
+#     image_path = os.path.join(ROOT_DIR, 'datasets/images/cat_1.jpg')
+#     predict_image(logistic_regression_model, Path(image_path), patch_size=image_size)
