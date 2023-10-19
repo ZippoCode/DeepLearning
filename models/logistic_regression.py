@@ -1,44 +1,16 @@
 import copy
-import os
 import sys
 import typing
 from pathlib import Path
 
-import h5py
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 
+from utils.dataloader import load_cat_dataset
 from utils.utils import sigmoid
 
 ROOT_DIR = sys.path[1]  # Project Root
-
-
-def load_cat_dataset() -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    path_train = os.path.join(ROOT_DIR, 'datasets/train_catvnoncat.h5')
-    path_test = os.path.join(ROOT_DIR, 'datasets/test_catvnoncat.h5')
-    if not os.path.exists(path_train) or not os.path.exists(path_test):
-        raise FileNotFoundError(f"Files {path_train}, {path_train} not found")
-
-    train_dataset = h5py.File(path_train, "r")
-    train_set_x_orig = np.array(train_dataset["train_set_x"][:])  # Train set features
-    train_set_y_orig = np.array(train_dataset["train_set_y"][:])  # Train set labels
-
-    test_dataset = h5py.File(path_test, "r")
-    test_set_x_orig = np.array(test_dataset["test_set_x"][:])  # Test set features
-    test_set_y_orig = np.array(test_dataset["test_set_y"][:])  # Test set labels
-
-    classes = np.array(test_dataset["list_classes"][:])  # The list of classes
-
-    train_set_y_orig = train_set_y_orig.reshape((1, train_set_y_orig.shape[0]))
-    test_set_y_orig = test_set_y_orig.reshape((1, test_set_y_orig.shape[0]))
-
-    assert train_set_x_orig.shape[0] == train_set_y_orig.shape[1]
-    assert test_set_x_orig.shape[0] == test_set_y_orig.shape[1]
-    assert train_set_x_orig.shape[1] == train_set_x_orig.shape[2]
-    assert test_set_x_orig.shape[1] == test_set_x_orig.shape[2]
-
-    return train_set_x_orig, train_set_y_orig, test_set_x_orig, test_set_y_orig, classes
 
 
 def flatten_and_standardize(train_set_x_orig: np.ndarray, test_set_x_orig: np.ndarray) -> (
