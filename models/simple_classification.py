@@ -274,19 +274,19 @@ def predict(parameters: dict, x: np.ndarray, threshold=0.5) -> np.ndarray:
     return predictions
 
 
-def show():
-    plt.figure(figsize=(16, 32))
-    hidden_layer_sizes = [1, 2, 3, 4, 5]
-
-    for i, n_h in enumerate(hidden_layer_sizes):
-        plt.subplot(5, 2, i + 1)
-        plt.title('Hidden Layer of size %d' % n_h)
-        parameters = nn_model(x, y, n_h, num_iterations=5000)
-        plot_decision_boundary(lambda lambda_: predict(parameters, lambda_.T), x, y)
-        predictions = predict(parameters, x)
-        accuracy = float(np.squeeze(np.dot(y, predictions.T) + np.dot(1 - y, 1 - predictions.T)) / float(y.size) * 100)
-        print("Accuracy for {} hidden units: {} %".format(n_h, accuracy))
-    plt.show()
+# def show():
+#     plt.figure(figsize=(16, 32))
+#     hidden_layer_sizes = [1, 2, 3, 4, 5]
+#
+#     for i, n_h in enumerate(hidden_layer_sizes):
+#         plt.subplot(5, 2, i + 1)
+#         plt.title('Hidden Layer of size %d' % n_h)
+#         parameters = nn_model(x, y, n_h, num_iterations=5000)
+#         plot_decision_boundary(lambda lambda_: predict(parameters, lambda_.T), x, y)
+#         predictions = predict(parameters, x)
+#         accuracy = float(np.squeeze(np.dot(y, predictions.T) + np.dot(1 - y, 1 - predictions.T)) / float(y.size) * 100)
+#         print("Accuracy for {} hidden units: {} %".format(n_h, accuracy))
+#     plt.show()
 
 
 def run(inputs: np.ndarray, labels: np.ndarray, visualize: bool):
@@ -309,7 +309,7 @@ def run(inputs: np.ndarray, labels: np.ndarray, visualize: bool):
         plt.show()
 
 
-if __name__ == '__main__':
+def main():
     x, y = load_planar_dataset(m=400)
     train_using_logistic_regression(x, y)
     run(inputs=x, labels=y, visualize=True)
@@ -330,3 +330,7 @@ if __name__ == '__main__':
         Y = Y % 2
 
     run(X, Y, True)
+
+
+if __name__ == '__main__':
+    main()

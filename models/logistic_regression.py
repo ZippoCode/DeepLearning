@@ -1,5 +1,6 @@
 import copy
 import sys
+import os
 import typing
 from pathlib import Path
 
@@ -190,7 +191,7 @@ def show_different_learning_rate(learning_rates: list, train_set_x: np.ndarray, 
     plt.show()
 
 
-def predict_image(logistic_regression_model: dict, image_path: Path, patch_size: int):
+def predict_image(logistic_regression_model: dict, image_path: Path, patch_size: int, classes: np.ndarray):
     if not image_path.exists():
         print(f"Image \"{image_path}\" not exist")
         return
@@ -206,9 +207,8 @@ def predict_image(logistic_regression_model: dict, image_path: Path, patch_size:
         int(np.squeeze(my_predicted_image)),].decode("utf-8") + "\" picture.")
 
 
-if __name__ == '__main__':
+def main():
     train_set_x_orig, train_set_y, test_set_x_orig, test_set_y, classes = load_cat_dataset()
-    image_size = train_set_x_orig.shape[1]
     train_set_x, test_set_x = flatten_and_standardize(train_set_x_orig, test_set_x_orig)
     print("Training set X shape: " + str(train_set_x.shape))
     print("Training set Y shape: " + str(train_set_y.shape))
@@ -222,10 +222,15 @@ if __name__ == '__main__':
     plt.plot(costs)
     plt.ylabel('cost')
     plt.xlabel('iterations (per hundreds)')
-#     plt.title("Learning rate =" + str(logistic_regression_model["learning_rate"]))
-#     plt.show()
-#
-#     learning_rates = [0.01, 0.005, 0.001, 0.0005, 0.0001]
-#     show_different_learning_rate(learning_rates, train_set_x, train_set_y, test_set_x, test_set_y)
-#     image_path = os.path.join(ROOT_DIR, 'datasets/images/cat_1.jpg')
-#     predict_image(logistic_regression_model, Path(image_path), patch_size=image_size)
+    plt.title("Learning rate =" + str(logistic_regression_model["learning_rate"]))
+    plt.show()
+
+    learning_rates = [0.01, 0.005, 0.001, 0.0005, 0.0001]
+    show_different_learning_rate(learning_rates, train_set_x, train_set_y, test_set_x, test_set_y)
+    image_size = train_set_x_orig.shape[1]
+    image_path = os.path.join(ROOT_DIR, 'datasets/images/cat_1.jpg')
+    predict_image(logistic_regression_model, Path(image_path), patch_size=image_size, classes=classes)
+
+
+if __name__ == '__main__':
+    main()
