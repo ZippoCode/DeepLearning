@@ -6,6 +6,7 @@ import numpy as np
 from sklearn.linear_model import LogisticRegressionCV
 
 from utils.dataloader import load_planar_dataset, load_extra_datasets
+from utils.initializers import initialize_parameters
 from utils.utils import sigmoid
 
 
@@ -35,7 +36,7 @@ def train_using_logistic_regression(x: np.ndarray, y: np.ndarray, plot_result=Fa
 
     :param x:
     :param y:
-    :param plot_result
+    :param plot_result:
     :return:
     """
     # Train the logistic regression classifier
@@ -68,32 +69,6 @@ def layer_sizes(x: np.ndarray, y: np.ndarray) -> typing.Tuple[int, int, int]:
     n_h = 4
     n_y = y.shape[0]
     return n_x, n_h, n_y
-
-
-def initialize_parameters(n_x: int, n_h: int, n_y: int) -> dict:
-    """
-    :param n_x: -- size of the input layer
-    :param n_h: -- size of the hidden layer
-    :param n_y: -- size of the output layer
-
-    :returns:
-    params -- python dictionary containing parameters:
-                    W1 -- weight matrix of shape (n_h, n_x)
-                    b1 -- bias vector of shape (n_h, 1)
-                    W2 -- weight matrix of shape (n_y, n_h)
-                    b2 -- bias vector of shape (n_y, 1)
-    """
-    weights_one = np.random.randn(n_h, n_x) * 0.01
-    bias_one = np.zeros(shape=(n_h, 1))
-    weights_two = np.random.randn(n_y, n_h) * 0.01
-    bias_two = np.zeros(shape=(n_y, 1))
-
-    parameters = {"W1": weights_one,
-                  "b1": bias_one,
-                  "W2": weights_two,
-                  "b2": bias_two}
-
-    return parameters
 
 
 def forward_propagation(x: np.ndarray, parameters: dict):

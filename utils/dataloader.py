@@ -34,6 +34,13 @@ def load_cat_dataset() -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray, np.nd
     assert train_set_x_orig.shape[1] == train_set_x_orig.shape[2]
     assert test_set_x_orig.shape[1] == test_set_x_orig.shape[2]
 
+    num_px = train_set_x_orig.shape[1]
+    print("Each image is of size: (" + str(num_px) + ", " + str(num_px) + ", 3)")
+    print("Training set X shape: " + str(train_set_x_orig.shape))
+    print("Training set Y shape: " + str(train_set_y_orig.shape))
+    print("Testing set X shape: " + str(test_set_x_orig.shape))
+    print("Testing set Y shape: " + str(test_set_y_orig.shape))
+
     return train_set_x_orig, train_set_y_orig, test_set_x_orig, test_set_y_orig, classes
 
 

@@ -14,16 +14,52 @@ def sigmoid(x: typing.Union[float, np.ndarray]) -> typing.Union[float, np.ndarra
     return s
 
 
-def sigmoid_derivative(x: typing.Union[float, np.ndarray]) -> typing.Union[float, np.ndarray]:
+def sigmoid_derivative(x: typing.Union[np.ndarray], z: np.ndarray) -> typing.Union[float, np.ndarray]:
     """
        Compute the gradient (also called the slope or derivative) of the sigmoid function with respect to its input x.
 
     :param x: A scalar or numpy array
+    :param z: 'Z' where we store for computing backward propagation efficiently
+
+
     :return: Your computed gradient.
     """
-    s = 1 / (1 + np.exp(-x))
-    ds = s * (1 - s)
-    return ds
+
+    s = 1 / (1 + np.exp(-z))
+    derivative = x * s * (1 - s)
+
+    assert x.shape == z.shape
+
+    return derivative
+
+
+def relu(x: typing.Union[float, np.ndarray]) -> typing.Union[float, np.ndarray]:
+    """
+        Compute the Rectified Linear Unit of x
+
+    :param x: A scalar or numpy array of any size
+
+    :return: ReLU(x)
+    """
+    s = np.maximum(0, x)
+    return s
+
+
+def relu_derivative(x: typing.Union[np.ndarray], z: np.ndarray) -> typing.Union[float, np.ndarray]:
+    """
+       Compute the gradient of the Rectified Linear Unit function with respect to its input x.
+
+    :param x: A scalar or numpy array
+    :param z: 'Z' where we store for computing backward propagation efficiently
+
+    :return: Your computed gradient.
+    """
+    derivative = np.array(x, copy=True)
+    derivative[z <= 0] = 0
+
+    assert derivative.shape == z.shape
+
+    return derivative
 
 
 def normalize_rows(x: np.ndarray) -> np.ndarray:

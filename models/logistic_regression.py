@@ -16,6 +16,13 @@ ROOT_DIR = sys.path[1]  # Project Root
 
 def flatten_and_standardize(train_set_x_orig: np.ndarray, test_set_x_orig: np.ndarray) -> (
         typing.Tuple)[np.ndarray, np.ndarray]:
+    """
+        Reshape and standardize the images
+
+    :param train_set_x_orig: Flatten and standardized training input matrix
+    :param test_set_x_orig: Flatten and standardized testing input matrix
+    :return:
+    """
     train_set_x_flatten = train_set_x_orig.reshape(train_set_x_orig.shape[0], -1).T
     test_set_x_flatten = test_set_x_orig.reshape(test_set_x_orig.shape[0], -1).T
     train_set = train_set_x_flatten / 255.
@@ -210,10 +217,6 @@ def predict_image(logistic_regression_model: dict, image_path: Path, patch_size:
 def main():
     train_set_x_orig, train_set_y, test_set_x_orig, test_set_y, classes = load_cat_dataset()
     train_set_x, test_set_x = flatten_and_standardize(train_set_x_orig, test_set_x_orig)
-    print("Training set X shape: " + str(train_set_x.shape))
-    print("Training set Y shape: " + str(train_set_y.shape))
-    print("Testing set X shape: " + str(test_set_x.shape))
-    print("Testing set Y shape: " + str(test_set_y.shape))
 
     print("Train model")
     logistic_regression_model = model(train_set_x, train_set_y, test_set_x, test_set_y, num_iterations=2000,
